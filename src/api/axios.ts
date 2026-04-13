@@ -37,8 +37,11 @@ if (API_BASE) {
     if (typeof data === 'string') {
       let result = data;
       for (const origin of LOCAL_ORIGINS) {
-        // Rewrite "{origin}/storage/..." → "/api/storage/..."
-        result = result.replaceAll(`${origin}/storage/`, '/api/storage/');
+        // Rewrite "{origin}/storage/..." → "/api/storage?path=..."
+        if (result.includes(`${origin}/storage/`)) {
+          const pathName = result.replace(`${origin}/storage/`, '');
+          result = `/api/storage?path=${encodeURIComponent(pathName)}`;
+        }
       }
       return result;
     }

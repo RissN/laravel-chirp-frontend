@@ -21,25 +21,25 @@ api.interceptors.request.use((config) => {
 });
 
 /**
- * Response interceptor: Rewrite localhost storage URLs to relative paths.
- * e.g. "http://127.0.0.1:8000/storage/uploads/img.jpg" → "/storage/uploads/img.jpg"
+ * Response interceptor: Rewrite storage URLs to go through Vercel's proxy function.
+ * e.g. "http://127.0.0.1:8000/storage/uploads/img.jpg" → "/api/storage/uploads/img.jpg"
  * 
- * In production (Vercel), relative /storage/* paths are proxied to ngrok
- * via vercel.json rewrites, avoiding ngrok's browser interstitial page.
- * In local dev, Vite proxy handles /storage/* → localhost:8000.
+ * The /api/storage/* route is handled by a Vercel Edge Function that fetches
+ * from ngrok with the ngrok-skip-browser-warning header, bypassing the interstitial.
  */
 if (API_BASE) {
   const LOCAL_ORIGINS = [
     'http://127.0.0.1:8000',
     'http://localhost:8000',
-    API_BASE, // Also rewrite ngrok URLs to relative
+    API_BASE,
   ];
 
   const rewriteUrls = (data: any): any => {
     if (typeof data === 'string') {
       let result = data;
       for (const origin of LOCAL_ORIGINS) {
-        result = result.replaceAll(origin, '');
+        // Rewrite "{origin}/storage/..." → "/api/storage/..."
+        result = result.replaceAll(`${origin}/storage/`, '/api/storage/');
       }
       return result;
     }

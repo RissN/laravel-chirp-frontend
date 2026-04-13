@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/storage/:path(.*)", "destination": "https://dffd-103-154-137-211.ngrok-free.app/storage/:path" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/api/storage/:path(.*)", "destination": "/api/storage/:path" },
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }

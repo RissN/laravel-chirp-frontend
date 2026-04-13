@@ -7,8 +7,9 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
+    'ngrok-skip-browser-warning': 'true',
   },
-  withCredentials: true,
+  withCredentials: !API_BASE, // Only send cookies for local dev (same origin)
 });
 
 api.interceptors.request.use((config) => {

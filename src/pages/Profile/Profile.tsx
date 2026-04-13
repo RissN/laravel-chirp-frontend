@@ -97,6 +97,7 @@ export default function Profile() {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Accept': 'application/json',
+          'ngrok-skip-browser-warning': 'true',
           // DO NOT set Content-Type, let the browser set it with the boundary
         }
       });

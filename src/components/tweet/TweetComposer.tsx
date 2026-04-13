@@ -109,7 +109,7 @@ export default function TweetComposer({ isReply = false, parentId, isModal = fal
         formData.append('type', 'tweet');
         
         const res = await api.post('/media/upload', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
+          headers: { 'Content-Type': undefined }
         });
         uploadedMediaUrls.push(res.data.data.url);
       }

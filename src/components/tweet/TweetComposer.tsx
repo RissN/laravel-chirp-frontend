@@ -65,6 +65,7 @@ export default function TweetComposer({ isReply = false, parentId, isModal = fal
       setIsExpanded(false);
       queryClient.invalidateQueries({ queryKey: ['timeline'] });
       queryClient.invalidateQueries({ queryKey: ['timeline-for-you'] });
+      queryClient.invalidateQueries({ queryKey: ['trending'] });
       if (user?.username) {
         queryClient.invalidateQueries({ queryKey: ['profile-tweets', user.username] });
       }

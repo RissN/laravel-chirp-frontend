@@ -21,21 +21,25 @@ api.interceptors.request.use((config) => {
 });
 
 /**
- * Response interceptor: Rewrite localhost URLs to API_BASE (ngrok) URL.
- * This fixes image/media URLs stored in the database as http://127.0.0.1:8000/storage/...
- * so they become accessible from the internet via ngrok.
+ * Response interceptor: Rewrite localhost storage URLs to relative paths.
+ * e.g. "http://127.0.0.1:8000/storage/uploads/img.jpg" → "/storage/uploads/img.jpg"
+ * 
+ * In production (Vercel), relative /storage/* paths are proxied to ngrok
+ * via vercel.json rewrites, avoiding ngrok's browser interstitial page.
+ * In local dev, Vite proxy handles /storage/* → localhost:8000.
  */
 if (API_BASE) {
   const LOCAL_ORIGINS = [
     'http://127.0.0.1:8000',
     'http://localhost:8000',
+    API_BASE, // Also rewrite ngrok URLs to relative
   ];
 
   const rewriteUrls = (data: any): any => {
     if (typeof data === 'string') {
       let result = data;
       for (const origin of LOCAL_ORIGINS) {
-        result = result.replaceAll(origin, API_BASE);
+        result = result.replaceAll(origin, '');
       }
       return result;
     }
